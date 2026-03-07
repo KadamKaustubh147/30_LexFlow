@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 7RdsHsNE6SC8JzxqTXED4bDvpuSbUS97JWHLGitwABgeTO1l8dAPmKMswjvoftg
+\restrict dMydkOfmZkQyQaxZggpUK4QfNXAxUdaFjuXnuahJqf2r6fcXSnnaSyoukODMObo
 
 -- Dumped from database version 18.3 (Debian 18.3-1.pgdg13+1)
 -- Dumped by pg_dump version 18.3 (Debian 18.3-1.pgdg13+1)
@@ -22,6 +22,99 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: case_proofs; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.case_proofs (
+    id integer NOT NULL,
+    client_id integer,
+    filename character varying(255) NOT NULL,
+    pdf_data bytea NOT NULL
+);
+
+
+ALTER TABLE public.case_proofs OWNER TO admin;
+
+--
+-- Name: case_proofs_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.case_proofs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.case_proofs_id_seq OWNER TO admin;
+
+--
+-- Name: case_proofs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.case_proofs_id_seq OWNED BY public.case_proofs.id;
+
+
+--
+-- Name: client_proofs; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.client_proofs (
+    id integer NOT NULL,
+    client_id integer,
+    filename character varying(255) NOT NULL,
+    pdf_data bytea NOT NULL
+);
+
+
+ALTER TABLE public.client_proofs OWNER TO admin;
+
+--
+-- Name: client_proofs_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.client_proofs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.client_proofs_id_seq OWNER TO admin;
+
+--
+-- Name: client_proofs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.client_proofs_id_seq OWNED BY public.client_proofs.id;
+
+
+--
+-- Name: clients; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.clients (
+    id integer NOT NULL,
+    client_type character varying(20) NOT NULL,
+    name character varying(20) NOT NULL,
+    contact_number character varying(10) NOT NULL,
+    email_address character varying(20),
+    address character varying(20) NOT NULL,
+    case_type character varying(20) NOT NULL,
+    cnr character varying(16) NOT NULL,
+    brief_description_of_case character varying(50) NOT NULL,
+    password_hash character varying(255) NOT NULL,
+    CONSTRAINT clients_client_type_check CHECK (((client_type)::text = ANY ((ARRAY['Individual'::character varying, 'Business'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.clients OWNER TO admin;
 
 --
 -- Name: lawfirm_contact_details; Type: TABLE; Schema: public; Owner: admin
@@ -104,6 +197,20 @@ ALTER SEQUENCE public.lawfirm_meta_id_seq OWNED BY public.lawfirm_meta.id;
 
 
 --
+-- Name: case_proofs id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.case_proofs ALTER COLUMN id SET DEFAULT nextval('public.case_proofs_id_seq'::regclass);
+
+
+--
+-- Name: client_proofs id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.client_proofs ALTER COLUMN id SET DEFAULT nextval('public.client_proofs_id_seq'::regclass);
+
+
+--
 -- Name: lawfirm_contact_details id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
@@ -115,6 +222,106 @@ ALTER TABLE ONLY public.lawfirm_contact_details ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.lawfirm_meta ALTER COLUMN id SET DEFAULT nextval('public.lawfirm_meta_id_seq'::regclass);
+
+
+--
+-- Data for Name: case_proofs; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.case_proofs (id, client_id, filename, pdf_data) FROM stdin;
+\.
+
+
+--
+-- Data for Name: client_proofs; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.client_proofs (id, client_id, filename, pdf_data) FROM stdin;
+\.
+
+
+--
+-- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.clients (id, client_type, name, contact_number, email_address, address, case_type, cnr, brief_description_of_case, password_hash) FROM stdin;
+\.
+
+
+--
+-- Data for Name: lawfirm_contact_details; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.lawfirm_contact_details (id, email, website_url, phone_number, meta_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: lawfirm_meta; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.lawfirm_meta (id, name, admin_email, password_hash, address, avg_rating, logo_url, firm_size, established_in, created_at, practice_area) FROM stdin;
+\.
+
+
+--
+-- Name: case_proofs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.case_proofs_id_seq', 1, false);
+
+
+--
+-- Name: client_proofs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.client_proofs_id_seq', 1, false);
+
+
+--
+-- Name: lawfirm_contact_details_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.lawfirm_contact_details_id_seq', 1, false);
+
+
+--
+-- Name: lawfirm_meta_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.lawfirm_meta_id_seq', 1, false);
+
+
+--
+-- Name: case_proofs case_proofs_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.case_proofs
+    ADD CONSTRAINT case_proofs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: client_proofs client_proofs_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.client_proofs
+    ADD CONSTRAINT client_proofs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clients clients_cnr_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.clients
+    ADD CONSTRAINT clients_cnr_key UNIQUE (cnr);
+
+
+--
+-- Name: clients clients_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.clients
+    ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
 
 
 --
@@ -134,6 +341,22 @@ ALTER TABLE ONLY public.lawfirm_meta
 
 
 --
+-- Name: case_proofs case_proofs_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.case_proofs
+    ADD CONSTRAINT case_proofs_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clients(id) ON DELETE CASCADE;
+
+
+--
+-- Name: client_proofs client_proofs_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.client_proofs
+    ADD CONSTRAINT client_proofs_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clients(id) ON DELETE CASCADE;
+
+
+--
 -- Name: lawfirm_contact_details lawfirm_contact_details_meta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -145,5 +368,5 @@ ALTER TABLE ONLY public.lawfirm_contact_details
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 7RdsHsNE6SC8JzxqTXED4bDvpuSbUS97JWHLGitwABgeTO1l8dAPmKMswjvoftg
+\unrestrict dMydkOfmZkQyQaxZggpUK4QfNXAxUdaFjuXnuahJqf2r6fcXSnnaSyoukODMObo
 
