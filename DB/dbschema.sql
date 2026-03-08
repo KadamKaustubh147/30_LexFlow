@@ -696,7 +696,3 @@ CREATE TABLE notifications (
         REFERENCES interns(id)
         ON DELETE CASCADE
 );
-
-
-
-
