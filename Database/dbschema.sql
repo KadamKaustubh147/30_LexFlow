@@ -1,6 +1,3 @@
---  Use this below syntax for auto generated primary key ---> recommender for newer versions
-
-
 CREATE TABLE lawfirm_meta (
     id              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
@@ -13,8 +10,6 @@ CREATE TABLE lawfirm_meta (
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ONE-TO-ONE: each firm has exactly one contact detail record.
--- lawfirm_id is the PK (not a separate id), eliminating the redundant identity column.
 CREATE TABLE lawfirm_contact_details (
     lawfirm_id      INT PRIMARY KEY,
     email           TEXT[],
@@ -32,7 +27,6 @@ CREATE TABLE practice_areas (
     name    VARCHAR(100) UNIQUE NOT NULL      -- e.g. 'Criminal', 'Civil', 'Corporate'
 );
 
--- MANY-TO-MANY: firm <--> practice areas
 CREATE TABLE lawfirm_practice_areas (
     lawfirm_id          INT NOT NULL,
     practice_area_id    INT NOT NULL,
@@ -76,9 +70,6 @@ CREATE TABLE lawfirm_courts (
 );
 
 
--- ============================================================
--- SECTION 2: USERS
--- ============================================================
 
 -- ONE-TO-MANY: one firm can have multiple admins
 CREATE TABLE lawfirm_admin (
@@ -163,11 +154,8 @@ CREATE TABLE interns (
 );
 
 -- ONE-TO-ONE: each intern has exactly one permissions record.
--- intern_id is the PK instead of a separate identity column.
--- The old code had id as PK + UNIQUE(intern_id) which structurally allowed
--- one-to-many (multiple permission rows per intern before the UNIQUE was added).
--- Making intern_id the PK is the correct, explicit way to enforce 1-1.
 CREATE TABLE intern_permissions (
+    -- this is one to one as primary key is unique and not null --> therefore one to one
     intern_id               INT PRIMARY KEY,
     can_view_documents      BOOLEAN DEFAULT FALSE,
     can_upload_documents    BOOLEAN DEFAULT FALSE,
@@ -188,9 +176,6 @@ CREATE TABLE intern_permissions (
 );
 
 
--- ============================================================
--- SECTION 3: CONSULTATIONS
--- ============================================================
 
 -- ONE-TO-MANY: a client can have many consultations with different firms
 CREATE TABLE consultations (
@@ -240,8 +225,6 @@ CREATE TABLE consultation_meetings (
 );
 
 -- ONE-TO-ONE with meeting: each meeting has at most one summary.
--- UNIQUE(meeting_id) enforces this — one summary row per meeting.
--- A summary can also exist without a meeting (phone call, walk-in), hence meeting_id is nullable.
 CREATE TABLE interaction_summaries (
     id                  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     consultation_id     INT NOT NULL,
@@ -280,9 +263,6 @@ CREATE TABLE interaction_summaries (
 );
 
 
--- ============================================================
--- SECTION 4: CASES
--- ============================================================
 
 -- ONE-TO-ONE with consultation: one consultation leads to at most one case.
 -- UNIQUE(consultation_id) enforces this.
@@ -435,9 +415,6 @@ CREATE TABLE case_tasks (
 );
 
 
--- ============================================================
--- SECTION 5: DOCUMENTS
--- ============================================================
 
 CREATE TABLE documents (
     id                  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -502,9 +479,6 @@ CREATE TABLE document_checklist (
 );
 
 
--- ============================================================
--- SECTION 6: MESSAGING
--- ============================================================
 
 CREATE TABLE message_threads (
     id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -555,9 +529,6 @@ CREATE TABLE messages (
 );
 
 
--- ============================================================
--- SECTION 7: BILLING & PAYMENTS
--- ============================================================
 
 CREATE TABLE billing_structures (
     id              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -618,9 +589,6 @@ CREATE TABLE invoice_line_items (
 );
 
 
--- ============================================================
--- SECTION 8: HEARINGS & SCHEDULING
--- ============================================================
 
 CREATE TABLE hearings (
     id              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
